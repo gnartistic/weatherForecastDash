@@ -1,0 +1,43 @@
+header > h1 {
+text-align: center;
+color: white;
+font-weight: bold;
+background-image: linear-gradient(to right, #3b6cc2, #240758);
+}
+
+main {
+    padding-top: 1vh;
+}
+
+main h1 {
+    font-weight: bold;
+}
+
+/* .forecastCard {
+    background-color: #33465b
+}
+*/
+
+#citySearchForm button{
+    font-size: 2vh;
+    color: #dadee3;
+    background-color: #5ba3e9;
+}
+#citySearchForm input {
+    color: #dadee3;
+    font-size: 2.25vh;
+}
+
+#previousSearches {
+    border-top: .25vh solid;
+}
+/*
+#previousSearches button {
+    background-color: #b7b7b7;
+
+} 
+
+#previousSearches button:hover {
+    background-color: #797979;
+} */
+

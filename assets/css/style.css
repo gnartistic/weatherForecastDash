@@ -13,10 +13,9 @@ main h1 {
     font-weight: bold;
 }
 
-/* .forecastCard {
+.forecastCard {
     background-color: #33465b
 }
-*/
 
 #citySearchForm button{
     font-size: 2vh;
@@ -31,7 +30,7 @@ main h1 {
 #previousSearches {
     border-top: .25vh solid;
 }
-/*
+
 #previousSearches button {
     background-color: #b7b7b7;
 
@@ -39,5 +38,33 @@ main h1 {
 
 #previousSearches button:hover {
     background-color: #797979;
-} */
+}
 
+#currentWeatherContainer p {
+    font-size: larger;
+    font-weight: 600;
+}
+
+#currentWeatherIcon {
+    background: white;
+    border-radius: 3rem;
+}
+
+#currentWeatherUV {
+    color: #ffffff;
+    padding: 0 10px 0 10px;
+    border-radius: .4rem;
+}
+
+#forecastContainer {
+    display: flex;
+    justify-content: space-between;
+}
+
+#forecastContainer div {
+    color: #ffffff;
+    min-width: 19%;
+    padding-left: 0.5em;
+    font-weight: 600;
+    font-size: 1.25em;
+}

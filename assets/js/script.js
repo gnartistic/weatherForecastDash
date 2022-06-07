@@ -10,22 +10,20 @@ var weatherAppId = "f327d5702804884321d27bf19eaae2bb";
 // search function
 function searchInput(event) {
     event.preventDefault()
-    currentWeatherDataApi(searchInputEl.val()) // the search input value
+    currentWeatherDataApi(searchInputEl.val()) // the search input value aka cityName
 }
 
 // fetch request for current weather api
-function currentWeatherDataApi(cityName) { // 
-    var url = `https://api.openweathermap.org/data/2.5/weather?units=imperial&q=${cityName}&appid=${weatherAppId}`; // api url, parameter expressions: cityName & weatherAppId (AJAX? whoop whoop), imperial units for fahrenheit
-    fetch(url) // fetch the url
-        .then(response => response.json()) // convert response to json
-        .then(data => {
-            cityName = data.name; // makes cityName whatever the name of the city you searched for is
-            console.log(data.name); // gotta make sure this bad boy is working
-            oneCallApi(cityName, data.coord.lon, data.coord.lat); // pulls latitude and longitude coordinates of city searched
-            dispSearchHist(cityName, false); 
-        })
-        .catch(error => {
-            console.log("Error:", error); // console log error if any
+function currentWeatherDataApi(cityName) {
+    fetch("https://api.openweathermap.org/data/2.5/weather?units=imperial&q=" + cityName + "&appid=" + weatherAppId) // fetch the url
+        .then(function (response) {
+            response.json()
+                .then(function (data) {
+                    cityName = data.name; // pulls name of city searched
+                    console.log(data.name); // gotta make sure this bad boy works
+                    oneCallApi(cityName, data.coord.lon , data.coord.lat); // pulls latitude and longitude coordinates of city searched
+                    dispSearchHist(cityName, false);
+                });
         });
     
     return;
@@ -33,20 +31,24 @@ function currentWeatherDataApi(cityName) { //
 
 // fetch data for one call api
 function oneCallApi(cityName, longitude, latitude) {
-    var url = `https://api.openweathermap.org/data/2.5/onecall?units=imperial&lon=${longitude}&lat=${latitude}&appid=${weatherAppId}`; // one call api url with lon and lat expressions as paramters, imperial for fahrenheit 
-    fetch(url)
-        .then(response => response.json()) // convert to json
-        .then(data => {
-            dispCurrentWeather(cityName, data.current); // currentWeather
-            weeklyForecast(data.daily) // forecastData
+    fetch("https://api.openweathermap.org/data/2.5/onecall?units=imperial&lon=" + longitude + "&lat=" + latitude + "&appid=" + weatherAppId)
+        .then(function (response) {
+            response.json()
+                .then(function (data) {
+                    console.log(data); // where I look to pull data for current weather and daily forecast
+                    dispCurrentWeather(cityName, data.current); // currentWeather
+                    weeklyForecast(data.daily) // forecastData
+                });
         });
+    
+    return;
 }
 
-function dispCurrentWeather(cityName, currentWeather) {
+function dispCurrentWeather(cityName, currentWeather) { // ref line 22 and line 38
     // current conditions => city name, date, icon of weather conditions, temp, humidity, wind speed, uv index
     $("#currentWeatherName").html(cityName); //city name
     $("#currentWeatherDate").html(moment().format("M/DD/YYYY")) //date
-    $("#currentWeatherIcon").attr("src", `http://openweathermap.org/img/wn/${currentWeather.weather[0].icon}.png`); //icon of weather conditions, source = https://openweathermap.org/weather-conditions
+    $("#currentWeatherIcon").attr("src", "http://openweathermap.org/img/wn/" + currentWeather.weather[0].icon + ".png"); //icon of weather conditions, source = https://openweathermap.org/weather-conditions
     $("#currentWeatherTemp").html(currentWeather.temp) //temp
     $("#currentWeatherHumidity").html(currentWeather.humidity) //humidity
     $("#currentWeatherWind").html(currentWeather.wind_speed) //windspeed
@@ -64,7 +66,7 @@ function dispCurrentWeather(cityName, currentWeather) {
     $("#cityWeatherContainer").css("display", "block")
 }
 
-function weeklyForecast(forecastData) {
+function weeklyForecast(forecastData) { // ref line 39
     // forecast cards. 5 days, date, icon of weather conditions, temp, wind speed, humidity
     forecastContainer.html("");
     for (var i = 1; i <= 5; i++) { // loop for the 5 cards
@@ -75,15 +77,15 @@ function weeklyForecast(forecastData) {
         <p>Temp: ${forecastData[i].temp.day}°F</p>
         <p>Wind: ${forecastData[i].wind_speed}MPH</p>
         <p>Humidity: ${forecastData[i].humidity}%</p>
-        </div>`) // template string containing elements containing dynamic forecast data
-        divEl.appendTo(forecastContainer)
+        </div>`) // template string creating elements containing dynamic forecast data pulled from data.daily
+        divEl.appendTo(forecastContainer) // add to div element already created in html with an id = forecastContainer
     }
 }
 
-function dispSearchHist(cityName, initialStart) {
+function dispSearchHist(cityName, initialStart) { // ref line 22
     // search history => when click presented with current and future conditions for that city
     var matchFound = false;
-    $("#previousSearches").children("").each(function (i) {
+    $("#previousSearches").children("").each(function () { // 
         if (cityName == $(this).text()) {
             matchFound = true;
             return;
@@ -91,14 +93,14 @@ function dispSearchHist(cityName, initialStart) {
     });
     if (matchFound) { return; }
 
-    var buttonEl = $(`<button type="button" class="col-12 mt-3 btn btn-secondary">${cityName}</button>`)
+    var buttonEl = $('<button type="button" class="col-12 mt-3 btn btn-secondary">' + cityName + '</button>')
     buttonEl.on("click", previousButtonClick);
     buttonEl.prependTo(searchHistoryEl);
 
     if (!initialStart) { savePreviousData(cityName) };
 }
 
-function savePreviousData(cityName) {
+function savePreviousData(cityName) { // ref line 100
     tempItem = JSON.parse(localStorage.getItem("previousSearches"))
     if (tempItem != null) {
         localStorage.setItem("previousSearches", JSON.stringify(tempItem.concat(cityName)))

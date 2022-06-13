@@ -21,11 +21,15 @@ function currentWeatherDataApi(cityName) {
                 .then(function (data) {
                     cityName = data.name; // pulls name of city searched
                     console.log(data.name); // gotta make sure this bad boy works
-                    oneCallApi(cityName, data.coord.lon , data.coord.lat); // pulls latitude and longitude coordinates of city searched
+                    oneCallApi(cityName, data.coord.lon, data.coord.lat); // pulls latitude and longitude coordinates of city searched
                     dispSearchHist(cityName, false);
-                });
+                })
+                .catch(err => {
+                    console.log("Error:", error);
+                })
+
         });
-    
+
     return;
 }
 
@@ -40,7 +44,7 @@ function oneCallApi(cityName, longitude, latitude) {
                     weeklyForecast(data.daily) // forecastData
                 });
         });
-    
+
     return;
 }
 
